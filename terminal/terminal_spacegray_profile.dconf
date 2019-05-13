@@ -1,0 +1,14 @@
+[:b1dcc9dd-5262-4d8d-a863-c897e6d979b9]
+foreground-color='rgb(187,187,187)'
+visible-name='SpaceGray'
+palette=['rgb(255,255,255)', 'rgb(255,107,104)', 'rgb(168,192,35)', 'rgb(214,191,85)', 'rgb(83,148,236)', 'rgb(174,138,190)', 'rgb(41,153,153)', 'rgb(153,153,153)', 'rgb(238,238,238)', 'rgb(255,135,133)', 'rgb(168,192,35)', 'rgb(255,255,0)', 'rgb(126,174,241)', 'rgb(255,153,255)', 'rgb(108,218,218)', 'rgb(31,31,31)']
+use-system-font=false
+use-transparent-background=false
+use-theme-colors=false
+font='Monospace 10'
+use-theme-transparency=false
+bold-color-same-as-fg=true
+bold-color='rgb(187,187,187)'
+background-color='rgb(43,48,59)'
+background-transparency-percent=23
+scrollback-lines=16384
