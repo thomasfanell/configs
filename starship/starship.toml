@@ -1,0 +1,54 @@
+# Get editor completions based on the config schema
+#"$schema" = 'https://starship.rs/config-schema.json'
+
+# Inserts a blank line between shell prompts
+add_newline = true
+
+[character] # The name of the module we are configuring is 'character'
+#success_symbol = '[➜](bold green)'
+#error_symbol = "[✗](bold red)"
+
+# Disable the package module, hiding it from the prompt completely
+[package]
+disabled = true
+
+# Displays current directory.
+[directory]
+format = "[$path]($style)"
+style = "bold white"
+truncate_to_repo = false
+# parent directories to show
+truncation_length = 8
+truncation_symbol = "…/"
+
+# Displays current Git branch when in a directory of a Git repository.
+[git_branch]
+format = ' \[[$branch]($style)\] '
+style = "bold purple"
+
+# Displays status of Git repository when in a directory of a Git repository.
+[git_status]
+format = '([$all_status$ahead_behind]($style) )'
+ahead = "⇡ $count "
+behind = "⇣ $count "
+staged = ' [$count](bold green) '
+style = "bold yellow"
+
+[git_metrics]
+disabled = false
+format = '([+$added]($added_style) )([-$deleted]($deleted_style) )'
+
+[python]
+disabled = true
+
+[cmake]
+disabled = true
+
+[perl]
+disabled = true
+
+[c]
+disabled = true
+
+[rust]
+disabled = true
