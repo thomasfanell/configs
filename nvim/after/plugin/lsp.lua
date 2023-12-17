@@ -41,7 +41,11 @@ lspconfig.clangd.setup {}
 lspconfig.cmake.setup {}
 lspconfig.pyright.setup {}
 lspconfig.rust_analyzer.setup {}
-
+--
+-- Requires manual installation of binaries.
+-- See: https://github.com/nolanderc/glsl_analyzer
+--
+lspconfig.glsl_analyzer.setup {}
 
 --
 -- Code completion
