@@ -1,3 +1,27 @@
+local lsp_zero = require("lsp-zero")
+
+lsp_zero.on_attach(function(_, bufnr)
+    local map_keys = function(keys, func, desc)
+        desc = "[LSP]: " .. desc
+        vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
+    end
+    local tb = require("telescope.builtin")
+    map_keys("K", vim.lsp.buf.hover, "Hover Documentation")
+    map_keys("gd", tb.lsp_definitions, "Go to definition")
+    map_keys("gr", tb.lsp_references, "Go to references")
+    map_keys("gI", tb.lsp_implementations, "Go to implementation")
+    map_keys("<leader>rn", vim.lsp.buf.rename, "Rename")
+    map_keys("<leader>ca", vim.lsp.buf.code_action, "Code action")
+    map_keys("<leader>D", tb.lsp_type_definitions, "Type definitions")
+    map_keys("<leader>ds", tb.lsp_document_symbols, "Document symbols")
+    map_keys("<leader>ws", tb.lsp_dynamic_workspace_symbols, "Workspace symbols")
+    map_keys("<leader>F", vim.lsp.buf.format, "Format document")
+    map_keys('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+    vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
+        vim.lsp.buf.format()
+    end, { desc = 'Format current buffer with LSP' })
+end)
+
 --
 -- Automatic LSP install
 --
@@ -10,20 +34,16 @@ require("mason-lspconfig").setup {
         "cmake",
         "pyright",
         "rust_analyzer",
-    }
+    },
+    handlers = {
+        lsp_zero.default_setup,
+    },
 }
+
 --
 -- nvim lua goodies
 --
 require("neodev").setup {}
-
---
--- LSP client setup
---
-local lsp_zero = require("lsp-zero")
-lsp_zero.on_attach(function(_, bufnr)
-    lsp_zero.default_keymaps({buffer = bufnr})
-end)
 
 --
 -- LSP server configurations
