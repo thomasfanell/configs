@@ -1,4 +1,6 @@
+--
+-- GLSL support
+--
 return {
-    -- Syntax highlighting
     "tikhomirov/vim-glsl"
 }

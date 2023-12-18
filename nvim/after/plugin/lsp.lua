@@ -1,6 +1,19 @@
 local lsp_zero = require("lsp-zero")
 
-lsp_zero.on_attach(function(_, bufnr)
+-- Format on save
+local augroup = vim.api.nvim_create_augroup('LspFormatting', {})
+local lsp_format_on_save = function(bufnr)
+    vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+    vim.api.nvim_create_autocmd('BufWritePre', {
+        group = augroup,
+        buffer = bufnr,
+        callback = function()
+            vim.lsp.buf.format()
+        end,
+    })
+end
+
+lsp_zero.on_attach(function(client, bufnr)
     local map_keys = function(keys, func, desc)
         desc = "[LSP]: " .. desc
         vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
@@ -20,11 +33,13 @@ lsp_zero.on_attach(function(_, bufnr)
     vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
         vim.lsp.buf.format()
     end, { desc = 'Format current buffer with LSP' })
+    -- Format on save
+    lsp_format_on_save(bufnr)
 end)
 
 --
 -- Automatic LSP install
---
+
 require("mason").setup {}
 require("mason-lspconfig").setup {
     ensure_installed = {
@@ -32,7 +47,7 @@ require("mason-lspconfig").setup {
         "lua_ls",
         "clangd",
         "cmake",
-        "pyright",
+        "pylsp",
         "rust_analyzer",
     },
     handlers = {
@@ -49,7 +64,9 @@ require("neodev").setup {}
 -- LSP server configurations
 --
 local lspconfig = require("lspconfig")
+
 lspconfig.vimls.setup {}
+
 lspconfig.lua_ls.setup {
     Lua = {
         workspace = { checkThirdParty = false },
@@ -57,9 +74,23 @@ lspconfig.lua_ls.setup {
         -- diagnostics = { disable = { "missing-fields" } },
     },
 }
+
 lspconfig.clangd.setup {}
 lspconfig.cmake.setup {}
-lspconfig.pyright.setup {}
+
+lspconfig.pylsp.setup {
+    settings = {
+        pylsp = {
+            plugins = {
+                pycodestyle = {
+                    ignore = { 'W391' },
+                    maxLineLength = 120
+                }
+            }
+        }
+    }
+}
+
 lspconfig.rust_analyzer.setup {}
 --
 -- Requires manual installation of binaries.

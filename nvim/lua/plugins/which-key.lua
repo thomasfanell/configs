@@ -1,3 +1,6 @@
+--
+-- Show possible key bindings
+--
 return {
     "folke/which-key.nvim",
     event = "VeryLazy",

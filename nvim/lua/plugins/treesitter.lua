@@ -1,3 +1,6 @@
+--
+-- Parsers
+--
 return {
     {
         "nvim-treesitter/nvim-treesitter",

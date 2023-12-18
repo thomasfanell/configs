@@ -1,5 +1,5 @@
-require("nvim-treesitter.configs").setup({
-    ensure_installed = {"vim", "lua", "c", "cpp", "python", "rust", "javascript", "typescript"},
+require("nvim-treesitter.configs").setup {
+    ensure_installed = { "vim", "lua", "c", "cpp", "cmake", "python", "rust", "javascript", "typescript" },
     auto_install = true,
     highlight = {
         enable = true,
@@ -8,4 +8,4 @@ require("nvim-treesitter.configs").setup({
     indent = {
         enable = true,
     },
-})
+}
