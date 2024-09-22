@@ -1,16 +1,9 @@
---
--- Git tools
---
 return {
-    "tpope/vim-fugitive",
+    "NeogitOrg/neogit",
     "lewis6991/gitsigns.nvim",
-    {
-        "NeogitOrg/neogit",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "sindrets/diffview.nvim",
-            "nvim-telescope/telescope.nvim",
-        },
-        config = true
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "sindrets/diffview.nvim",
     },
+    config = true
 }

@@ -1,4 +1,4 @@
-require("neo-tree").setup {
+require "neo-tree".setup {
     filesystem = {
         filtered_items = {
             hide_dotfiles = false,
@@ -6,5 +6,5 @@ require("neo-tree").setup {
     }
 }
 
-vim.keymap.set('n', '<C-n>', ':Neotree filesystem reveal left<CR>', {})
-vim.keymap.set('n', '<leader>bf', ':Neotree buffers reveal float<CR>', {})
+vim.keymap.set('n', '<C-n>', ':Neotree filesystem reveal left<CR>', { desc = "Open Neotree to the left" })
+vim.keymap.set('n', '<leader>fb', ':Neotree buffers reveal float<CR>', { desc = "Show buffers" })

@@ -1,52 +1,13 @@
-local lsp_zero = require("lsp-zero")
-
--- Format on save
-local augroup = vim.api.nvim_create_augroup('LspFormatting', {})
-local lsp_format_on_save = function(bufnr)
-    vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-    vim.api.nvim_create_autocmd('BufWritePre', {
-        group = augroup,
-        buffer = bufnr,
-        callback = function()
-            vim.lsp.buf.format()
-        end,
-    })
-end
-
-lsp_zero.on_attach(function(client, bufnr)
-    local map_keys = function(keys, func, desc)
-        desc = "[LSP]: " .. desc
-        vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
-    end
-    local tb = require("telescope.builtin")
-    map_keys("K", vim.lsp.buf.hover, "Hover Documentation")
-    map_keys("gd", tb.lsp_definitions, "Go to definition")
-    map_keys("gr", tb.lsp_references, "Go to references")
-    map_keys("gI", tb.lsp_implementations, "Go to implementation")
-    map_keys("<leader>rn", vim.lsp.buf.rename, "Rename")
-    map_keys("<leader>ca", vim.lsp.buf.code_action, "Code action")
-    map_keys("<leader>D", tb.lsp_type_definitions, "Type definitions")
-    map_keys("<leader>ds", tb.lsp_document_symbols, "Document symbols")
-    map_keys("<leader>ws", tb.lsp_dynamic_workspace_symbols, "Workspace symbols")
-    map_keys("<leader>F", vim.lsp.buf.format, "Format document")
-    map_keys('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
-    vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-        vim.lsp.buf.format()
-    end, { desc = 'Format current buffer with LSP' })
-    -- Format on save
-    lsp_format_on_save(bufnr)
-end)
-
---
--- Automatic LSP install
-
 require("mason").setup {}
+
+lsp_zero = require("lsp-zero")
+
 require("mason-lspconfig").setup {
     ensure_installed = {
         "vimls",
         "lua_ls",
         "clangd",
-        "cmake",
+        "neocmake",
         "pylsp",
         "rust_analyzer",
     },
@@ -56,55 +17,25 @@ require("mason-lspconfig").setup {
 }
 
 --
--- nvim lua goodies
+-- LSP messages
 --
-require("neodev").setup {}
+require("fidget").setup {}
 
 --
--- LSP server configurations
+-- Function signatures
 --
-local lspconfig = require("lspconfig")
-
-lspconfig.vimls.setup {}
-
-lspconfig.lua_ls.setup {
-    Lua = {
-        workspace = { checkThirdParty = false },
-        telemetry = { enable = false },
-        -- diagnostics = { disable = { "missing-fields" } },
-    },
-}
-
-lspconfig.clangd.setup {}
-lspconfig.cmake.setup {}
-
-lspconfig.pylsp.setup {
-    settings = {
-        pylsp = {
-            plugins = {
-                pycodestyle = {
-                    ignore = { 'W391' },
-                    maxLineLength = 120
-                }
-            }
-        }
-    }
-}
-
-lspconfig.rust_analyzer.setup {}
---
--- Requires manual installation of binaries.
--- See: https://github.com/nolanderc/glsl_analyzer
---
-lspconfig.glsl_analyzer.setup {}
+require("lsp_signature").setup {}
 
 --
 -- Code completion
 --
 local cmp = require("cmp")
 local luasnip = require "luasnip"
+
 require("luasnip.loaders.from_vscode").lazy_load()
+
 luasnip.config.setup {}
+
 cmp.setup {
     completion = {
         completeopt = "menu,menuone,noinsert",
@@ -151,6 +82,71 @@ cmp.setup {
 }
 
 --
--- Function signatures
+-- Format on save
 --
-require("lsp_signature").setup {}
+local augroup = vim.api.nvim_create_augroup('LspFormatting', {})
+local lsp_format_on_save = function(bufnr)
+    vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+    vim.api.nvim_create_autocmd('BufWritePre', {
+        group = augroup,
+        buffer = bufnr,
+        callback = function()
+            vim.lsp.buf.format()
+        end,
+    })
+end
+
+lsp_zero.on_attach(function(client, bufnr)
+    local map_keys = function(keys, func, desc)
+        desc = "[LSP]: " .. desc
+        vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
+    end
+    local tb = require("telescope.builtin")
+    map_keys("K", vim.lsp.buf.hover, "Hover Documentation")
+    map_keys("gd", tb.lsp_definitions, "Go to definition")
+    map_keys("gr", tb.lsp_references, "Go to references")
+    map_keys("gI", tb.lsp_implementations, "Go to implementation")
+    map_keys("<leader>rn", vim.lsp.buf.rename, "Rename")
+    map_keys("<leader>ca", vim.lsp.buf.code_action, "Code action")
+    map_keys("<leader>D", tb.lsp_type_definitions, "Type definitions")
+    map_keys("<leader>ds", tb.lsp_document_symbols, "Document symbols")
+    map_keys("<leader>ws", tb.lsp_dynamic_workspace_symbols, "Workspace symbols")
+    map_keys("<leader>F", vim.lsp.buf.format, "Format document")
+    map_keys('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+    vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
+        vim.lsp.buf.format()
+    end, { desc = 'Format current buffer with LSP' })
+    -- Format on save
+    lsp_format_on_save(bufnr)
+end)
+
+-- Configure LSPs
+-------------------------------------------------------------------------------
+
+local lspconfig = require "lspconfig"
+
+lspconfig.clangd.setup {}
+lspconfig.neocmake.setup {}
+lspconfig.vimls.setup {}
+lspconfig.rust_analyzer.setup {}
+
+lspconfig.lua_ls.setup {
+    Lua = {
+        workspace = { checkThirdParty = false },
+        telemetry = { enable = false },
+        -- diagnostics = { disable = { "missing-fields" } },
+    },
+}
+
+lspconfig.pylsp.setup {
+    settings = {
+        pylsp = {
+            plugins = {
+                pycodestyle = {
+                    ignore = { 'W391' },
+                    maxLineLength = 120
+                }
+            }
+        }
+    }
+}
